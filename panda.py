@@ -48,6 +48,7 @@ def getFullName(driver: webD):
     
     return driver , fullName;
 
+
 def dashboardChangeTheName(driver: webD, fullName: any, newName: str, psw: str):
     
     button = driver.find_element(By.CLASS_NAME,"btn-panda")
@@ -67,12 +68,14 @@ def dashboardChangeTheName(driver: webD, fullName: any, newName: str, psw: str):
     
     time.sleep(5)
 
+
 def logOut(driver: webD):
     logOut_button = driver.find_element(By.LINK_TEXT,"Account")
     driver.execute_script("arguments[0].click();",logOut_button)
     time.sleep(5)
     driver.close()
     return driver
+
 
 def startBrowser():
     chrome_options = Options()
@@ -86,7 +89,8 @@ def startBrowser():
     driver = webD.Chrome(options=chrome_options)
     return driver
 
-def __init__():
+
+def __init__(): 
     
     command = ""
     print("Hello PandaMan!\n")
@@ -118,7 +122,6 @@ def __init__():
             command= input("Do you want ot reload the process?(y/n)\n")
         
         if(command.lower() == "n"):
-            command = input("Do you want ot reload the process?(y/n)\n")
             if(command.lower() == "n"):
                 print("Have a nice day!")
                 break
