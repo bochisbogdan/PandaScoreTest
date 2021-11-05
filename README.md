@@ -13,3 +13,6 @@
 
 'docker run -t -i <name>'
 
+# Tests
+
+'python tests.py'
