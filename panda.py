@@ -3,10 +3,8 @@ from logging import exception
 
 from selenium import webdriver as webD
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-
-
 
 
 def loginOnlyPanda(driver : webD, Passwors: str, Email: str):
@@ -14,9 +12,8 @@ def loginOnlyPanda(driver : webD, Passwors: str, Email: str):
 
     driver.get(base_url)
 
-    
-    links = driver.find_elements(By.XPATH,"//*[@href]")
-    button = driver.find_element(By.TAG_NAME,"input")
+    time.sleep(5)
+    button = driver.find_element(By.XPATH,"//input[@value=\"Login\"]")
     
     email = driver.find_element(By.NAME,"email")
     password = driver.find_element(By.NAME,"password")
@@ -26,7 +23,6 @@ def loginOnlyPanda(driver : webD, Passwors: str, Email: str):
 
     button.submit()
 
-    driver.execute_script("arguments[0].click();",button)
     time.sleep(5)
 
     status = "Your Panda credentials are good!"
@@ -47,21 +43,17 @@ def getFullName(driver: webD):
     
     try:
         fullName = driver.find_element(By.XPATH,"//span[contains(text(),'Name')]/following-sibling::*[1]")
-        #print("Your full name is: " + fullName.get_attribute("value")+"\n")
     except Exception:
         print("Something'g rong!")
     
     return driver , fullName;
 
-
-def dashboardChangeTheName(driver: webD, fullName: any, newName: str, password: str):
+def dashboardChangeTheName(driver: webD, fullName: any, newName: str, psw: str):
     
-    driver = driver
-
     button = driver.find_element(By.CLASS_NAME,"btn-panda")
     
     password = driver.find_element(By.XPATH,"//span[contains(text(),'Current password')]/following-sibling::*[1]")
-    password.send_keys(password)
+    password.send_keys(psw)
 
     fullName.send_keys(Keys.BACKSPACE)
     for i in str(fullName):
@@ -74,14 +66,31 @@ def dashboardChangeTheName(driver: webD, fullName: any, newName: str, password: 
         print("Something'g rong!")
     
     time.sleep(5)
+
+def logOut(driver: webD):
+    logOut_button = driver.find_element(By.LINK_TEXT,"Account")
+    driver.execute_script("arguments[0].click();",logOut_button)
+    time.sleep(5)
+    driver.close()
+    return driver
+
+def startBrowser():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_prefs = {}
+    chrome_options.experimental_options["prefs"] = chrome_prefs
+    chrome_prefs["profile.default_content_settings"] = {"images": 2}
     
+    driver = webD.Chrome(options=chrome_options)
+    return driver
 
 def __init__():
-    driver = webD.Chrome(ChromeDriverManager().install())
-    time.sleep(5)
+    
     command = ""
     print("Hello PandaMan!\n")
-    case = 0
+    driver = startBrowser()
     
     while (command != "exit"):
         
@@ -93,24 +102,31 @@ def __init__():
             print (status)
             driver, fullName = getFullName(driver=driver)
             print("Your fullName is: "+ fullName.get_attribute("value")+"\n")
-            command = input("Doyou want to change your name?(y/n)")
-            if(command == "y"):
-                newName= input("New name:")
-                dashboardChangeTheName(driver=driver, fullName=fullName, newName=newName, password=password)
-                driver, fullName = getFullName(driver=driver)
-                print("Your new name is:" + fullName.get_attribute("value")+"\n")
-            if(command == "n"):
-                print("Have a nice day!")
-                break
+            command = input("Do you want ochange the name?(y/n)\n")
         else:
-            print (status+"\n")
+            print(status)
+            status="login faild"
+            command = "n"
+
+        if(command.lower() == "y"):
+            newName= input("New name:")
+            dashboardChangeTheName(driver=driver, fullName=fullName, newName=newName, psw=password)
+            driver, fullName = getFullName(driver=driver)
+            print("Your new name is:" + fullName.get_attribute("value")+"\n")
+            command = "n"
+        else:
             command= input("Do you want ot reload the process?(y/n)\n")
-            if(command == "n"):
+        
+        if(command.lower() == "n"):
+            command = input("Do you want ot reload the process?(y/n)\n")
+            if(command.lower() == "n"):
                 print("Have a nice day!")
                 break
-        command = input("Do you want ot reload  the process?(y/n)\n")
-        if(command == "n"):
-            print("Have a nice day!")
-            break
+        
+        if(command.lower() == "y"):
+            if(status != "login faild"):
+                driver = logOut(driver=driver)
+                driver = startBrowser()
+
 
 __init__()
