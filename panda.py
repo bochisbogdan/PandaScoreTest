@@ -130,6 +130,3 @@ def __init__():
             if(status != "login faild"):
                 driver = logOut(driver=driver)
                 driver = startBrowser()
-
-
-__init__()
