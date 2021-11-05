@@ -36,7 +36,6 @@ def loginOnlyPanda(driver : webD, Passwors: str, Email: str):
 
     except Exception:
         pass
-
         
     return driver, status
 
@@ -44,9 +43,8 @@ def loginOnlyPanda(driver : webD, Passwors: str, Email: str):
 def getFullName(driver: webD):
     link = driver.find_element(By.LINK_TEXT,"Account")
     driver.execute_script("arguments[0].click();",link)
-    
     time.sleep(10)
-
+    
     try:
         fullName = driver.find_element(By.XPATH,"//span[contains(text(),'Name')]/following-sibling::*[1]")
         #print("Your full name is: " + fullName.get_attribute("value")+"\n")
@@ -63,7 +61,7 @@ def dashboardChangeTheName(driver: webD, fullName: any, newName: str, password: 
     button = driver.find_element(By.CLASS_NAME,"btn-panda")
     
     password = driver.find_element(By.XPATH,"//span[contains(text(),'Current password')]/following-sibling::*[1]")
-    password.send_keys("wVYXSewL7pszm5C")
+    password.send_keys(password)
 
     fullName.send_keys(Keys.BACKSPACE)
     for i in str(fullName):
