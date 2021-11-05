@@ -1,0 +1,15 @@
+Hello!
+
+-> The extension for my "console program" will be another function like creatAccount(driver: webdriver, email: str, password: str)
+
+1. 
+Access the main page https://app.pandascore.co/login
+    find the create account link/button, go to that page
+
+2. 
+Fill the data and find the reCaptcha checkbox,
+    and yes the reCaptcha will be in iframe with selenium you can switch to frame
+    if it's reCaptcha with photos there it's a lite bit harder, 
+    you need to download the audio instead to select the correct photos.
+    After converting audio to text(the words from that .mp3) 
+    "your script" will enter the words and check verify(sometimes you need to fill one more checkbox reCaptcha).
